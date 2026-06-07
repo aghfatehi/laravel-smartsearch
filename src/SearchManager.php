@@ -63,7 +63,7 @@ class SearchManager implements SearchManagerContract
         if (!class_exists(\Elastic\Elasticsearch\ClientBuilder::class)) {
             throw new \RuntimeException('Elasticsearch driver requires elasticsearch/elasticsearch package. Run: composer require elasticsearch/elasticsearch');
         }
-        return new ElasticsearchDriver($this->config['elasticsearch']['hosts'] ?? ['localhost:9200']);
+        return new ElasticsearchDriver($this->config['elasticsearch'] ?? []);
     }
 
     private function createDatabaseDriver(): DatabaseDriver

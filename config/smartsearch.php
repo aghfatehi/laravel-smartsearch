@@ -65,6 +65,26 @@ return [
     | Configure your Elasticsearch cluster connection. Hosts are comma-separated.
     |
     */
+    /*
+    |--------------------------------------------------------------------------
+    | Elasticsearch Configuration
+    |--------------------------------------------------------------------------
+    |
+    | Configure your Elasticsearch cluster. At minimum you need to set the
+    | host(s). Authentication can be done via Basic Auth (ELASTICSEARCH_USER /
+    | ELASTICSEARCH_PASS) or API Key (ELASTICSEARCH_API_KEY).
+    |
+    | For Elastic Cloud, set ELASTICSEARCH_CLOUD_ID instead of hosts.
+    |
+    | Example .env:
+    |   ELASTICSEARCH_HOSTS=localhost:9200
+    |   ELASTICSEARCH_USER=elastic
+    |   ELASTICSEARCH_PASS=changeme
+    |   ELASTICSEARCH_API_KEY=base64key
+    |   ELASTICSEARCH_CLOUD_ID=my-cluster:dXM...=
+    |   ELASTICSEARCH_RETRIES=3
+    |
+    */
     'elasticsearch' => [
 
         /*
@@ -94,6 +114,87 @@ return [
         |
         */
         'analyzer' => env('ELASTICSEARCH_ANALYZER', 'standard'),
+
+        /*
+        |--------------------------------------------------------------------------
+        | Elastic Cloud ID
+        |--------------------------------------------------------------------------
+        |
+        | If using Elastic Cloud (https://cloud.elastic.co), set this instead of
+        | hosts. The client will resolve the correct endpoints automatically.
+        |
+        | How to get it:
+        |   https://cloud.elastic.co > Deployment > Copy Cloud ID
+        |   See: https://www.elastic.co/search-labs/tutorials/install-elasticsearch/
+        |        find-cloud-id-create-api-keys
+        |
+        | Env: ELASTICSEARCH_CLOUD_ID
+        | Default: null
+        |
+        */
+        'cloud_id' => env('ELASTICSEARCH_CLOUD_ID'),
+
+        /*
+        |--------------------------------------------------------------------------
+        | Basic Authentication
+        |--------------------------------------------------------------------------
+        |
+        | Username and password for Elasticsearch Basic Auth.
+        | Leave null if using API Key authentication instead.
+        |
+        | Env: ELASTICSEARCH_USER, ELASTICSEARCH_PASS
+        | Default: null
+        |
+        */
+        'user' => env('ELASTICSEARCH_USER'),
+        'pass' => env('ELASTICSEARCH_PASS'),
+
+        /*
+        |--------------------------------------------------------------------------
+        | API Key Authentication
+        |--------------------------------------------------------------------------
+        |
+        | Base64-encoded API key for Elasticsearch. Takes precedence over
+        | Basic Auth if both are set.
+        |
+        | How to create:
+        |   https://cloud.elastic.co > Your deployment > Stack Management >
+        |   Security > API Keys > Create API key
+        |   See: https://www.elastic.co/search-labs/tutorials/install-elasticsearch/
+        |        find-cloud-id-create-api-keys
+        |
+        | Env: ELASTICSEARCH_API_KEY
+        | Default: null
+        |
+        */
+        'api_key' => env('ELASTICSEARCH_API_KEY'),
+
+        /*
+        |--------------------------------------------------------------------------
+        | Connection Retries
+        |--------------------------------------------------------------------------
+        |
+        | Number of times to retry failed Elasticsearch requests before giving up.
+        |
+        | Env: ELASTICSEARCH_RETRIES
+        | Default: 3
+        |
+        */
+        'retries' => env('ELASTICSEARCH_RETRIES', 3),
+
+        /*
+        |--------------------------------------------------------------------------
+        | SSL Verification
+        |--------------------------------------------------------------------------
+        |
+        | Enable or disable SSL certificate verification.
+        | Set to false only in local/development environments.
+        |
+        | Env: ELASTICSEARCH_SSL_VERIFY
+        | Default: true
+        |
+        */
+        'ssl_verify' => env('ELASTICSEARCH_SSL_VERIFY', true),
     ],
 
     /*

@@ -18,11 +18,37 @@ class ElasticsearchDriver implements SearchDriver
     private ClientInterface $client;
     private IndexMapper $mapper;
 
-    public function __construct(array $hosts, ?ClientInterface $client = null)
+    public function __construct(array $config = [], ?ClientInterface $client = null)
     {
-        $this->client = $client ?? ClientBuilder::create()
-            ->setHosts($hosts)
-            ->build();
+        if ($client) {
+            $this->client = $client;
+        } else {
+            $builder = ClientBuilder::create();
+
+            if (!empty($config['cloud_id'])) {
+                $builder->setElasticCloudId($config['cloud_id']);
+            } else {
+                $hosts = $config['hosts'] ?? ['localhost:9200'];
+                $builder->setHosts($hosts);
+            }
+
+            if (!empty($config['api_key'])) {
+                $builder->setApiKey($config['api_key']);
+            } elseif (!empty($config['user']) && !empty($config['pass'])) {
+                $builder->setBasicAuthentication($config['user'], $config['pass']);
+            }
+
+            if (isset($config['retries'])) {
+                $builder->setRetries((int) $config['retries']);
+            }
+
+            if (isset($config['ssl_verify'])) {
+                $builder->setSSLVerification((bool) $config['ssl_verify']);
+            }
+
+            $this->client = $builder->build();
+        }
+
         $this->mapper = new IndexMapper();
     }
 

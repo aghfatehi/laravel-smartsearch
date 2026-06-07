@@ -64,9 +64,26 @@ Integrating **search for Laravel applications** often means:
 
 ---
 
-## Installation
+## What Sets SmartSearch Apart
 
-**No extra dependencies required.** This **Laravel search package** works immediately with database search.
+These features are **not** available in Elasticsearch or Laravel Scout alone. They are the unique value SmartSearch brings:
+
+| Feature | Elasticsearch Native | Laravel Scout Native | SmartSearch |
+|---------|----------------|-----------------|-------------|
+| **Single API across engines** | No — own query DSL only | No — Scout providers only (Algolia, MeiliSearch, Typesense) | Yes — works with database, Elasticsearch **and** Scout providers through one unified API |
+| **Standalone DB driver** | No | Requires Scout ecosystem | Yes — works as a standalone database driver without installing Scout or any other package |
+| **Queue auto-indexing** | No — you build it | Opt-in (`SCOUT_QUEUE=true` + config) | Yes — **enabled by default**, zero config, auto-dispatches queue jobs |
+| **Automatic fallback** | No — downtime = 503 | No — only pagination count fallback | Yes — configurable fallback driver when primary is unreachable |
+| **Arabic normalization** | Server-side only (index analyzer config) | No | Yes — PHP-level normalization (أ/إ/آ → ا, ة → ه, ى → ي) applied consistently across **all** drivers |
+| **First-class ES support** | N/A (is Elasticsearch) | Requires community driver (`laravel-scout-elastic`) | Yes — built-in Elasticsearch driver with full ClientBuilder config, no extra packages needed |
+
+SmartSearch is **not** "yet another way to call Elasticsearch or Scout." It is an **abstraction layer** that:
+- Unifies database, Elasticsearch, **and** Scout under one fluent API
+- Adds features neither engine provides alone (PHP-level Arabic normalization, driver fallback, queue-by-default indexing)
+- Gives Elasticsearch first-class support without community adapters
+- Lets you start searching in under a minute — then switch or upgrade engines later by changing one `.env` line
+
+---
 
 ```bash
 composer require aghfatehi/laravel-smartsearch
@@ -107,6 +124,98 @@ SMARTSEARCH_FALLBACK=database
 ```
 
 That's it.
+
+## Elasticsearch Setup
+
+To use the **Elasticsearch for Laravel** driver, set the driver in your `.env`:
+
+```env
+SMARTSEARCH_DRIVER=elasticsearch
+```
+
+### Connecting to Elasticsearch
+
+**Local / self-hosted:**
+
+```env
+ELASTICSEARCH_HOSTS=localhost:9200
+```
+
+**With Basic Auth:**
+
+```env
+ELASTICSEARCH_HOSTS=localhost:9200
+ELASTICSEARCH_USER=elastic
+ELASTICSEARCH_PASS=changeme
+```
+
+**With API Key (takes precedence over Basic Auth):**
+
+```env
+ELASTICSEARCH_HOSTS=localhost:9200
+ELASTICSEARCH_API_KEY=base64encodedapikey
+```
+
+> Where to get an API key: https://cloud.elastic.co > Your deployment > Stack Management > Security > API Keys > Create API key
+
+**Elastic Cloud:**
+
+```env
+SMARTSEARCH_DRIVER=elasticsearch
+ELASTICSEARCH_CLOUD_ID=my-cluster:dXM...
+ELASTICSEARCH_USER=elastic
+ELASTICSEARCH_PASS=yourpassword
+```
+
+No port or host needed — Cloud ID resolves endpoints automatically.
+
+> Where to get Cloud ID: https://cloud.elastic.co > Your deployment > Copy Cloud ID (or Help icon > Connection Details)
+
+### Additional Options
+
+```env
+ELASTICSEARCH_RETRIES=3          # Connection retries on failure
+ELASTICSEARCH_SSL_VERIFY=true    # SSL cert verification
+ELASTICSEARCH_ANALYZER=arabic    # Text analyzer (standard, arabic, english, etc.)
+```
+
+> **Note:** The Elasticsearch client is bundled with the package — no extra `composer require` needed. Just set the environment variables above and it works.
+
+---
+
+## Scout Driver
+
+To use the Scout driver, you first install and configure [Laravel Scout](https://laravel.com/docs/scout) normally — it has its own `.env` variables and `config/scout.php` settings independent of SmartSearch:
+
+```env
+SMARTSEARCH_DRIVER=scout         # SmartSearch uses Scout
+SCOUT_DRIVER=algolia             # Scout's own driver (algolia / meilisearch / typesense / database / collection)
+ALGOLIA_APP_ID=your-app-id
+ALGOLIA_SECRET=your-write-api-key
+```
+
+Since Scout manages its own model events, **use Scout's own `Searchable` trait** on your model (not SmartSearch's):
+
+```php
+use Laravel\Scout\Searchable;
+
+class Product extends Model
+{
+    use Searchable;
+}
+```
+
+SmartSearch's `ScoutDriver` will call Scout's API through your model. Auto-indexing is handled by Scout internally.
+
+| Service | Signup | Get API Keys |
+|---------|--------|-------------|
+| **Algolia** | https://www.algolia.com/users/sign_up | Dashboard > API Keys |
+| **MeiliSearch Cloud** | https://cloud.meilisearch.com | Project Settings > API Keys |
+| **Typesense Cloud** | https://cloud.typesense.org | Dashboard > API Keys |
+
+> Scout is optional (`require-dev`). Run `composer require laravel/scout` and publish its config to use it.
+
+---
 
 ### Environment Variables
 
