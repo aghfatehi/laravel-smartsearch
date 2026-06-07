@@ -1,0 +1,9 @@
+/vendor/
+/node_modules/
+.idea/
+*.iml
+.DS_Store
+Thumbs.db
+.phpunit.result.cache
+phpunit.xml
+PROJECT_MAP.md

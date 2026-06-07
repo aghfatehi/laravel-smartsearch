@@ -1,0 +1,53 @@
+{
+    "name": "aghfatehi/laravel-smartsearch",
+    "description": "Laravel SmartSearch by Fatehi AL-AGHBARI — production-grade search abstraction layer for Laravel with Elasticsearch, Scout, and database fallback. Unified search API, automatic indexing, Arabic/multilingual support, queue-driven, safe fallback. The most flexible Laravel search package for Eloquent models.",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Fatehi AL-AGHBARI",
+            "email": "fathi.a.n2002@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=8.0",
+        "illuminate/support": "^9.0|^10.0|^11.0|^12.0|^13.0",
+        "illuminate/database": "^9.0|^10.0|^11.0|^12.0|^13.0",
+        "illuminate/queue": "^9.0|^10.0|^11.0|^12.0|^13.0",
+        "elasticsearch/elasticsearch": "^8.0|^9.0"
+    },
+    "require-dev": {
+        "orchestra/testbench": "^7.0|^8.0|^9.0|^10.0|^11.0",
+        "phpunit/phpunit": "^9.0|^10.0|^11.0",
+        "mockery/mockery": "^1.5",
+        "laravel/scout": "^9.0|^10.0|^11.0"
+    },
+    "suggest": {
+        "laravel/scout": "To use the Scout driver (Algolia, MeiliSearch, Typesense)"
+    },
+    "autoload": {
+        "psr-4": {
+            "SmartSearch\\": "src/"
+        },
+        "files": [
+            "src/helpers.php"
+        ]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "SmartSearch\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "SmartSearch\\SmartSearchServiceProvider"
+            ],
+            "aliases": {
+                "Search": "SmartSearch\\Facades\\Search"
+            }
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
