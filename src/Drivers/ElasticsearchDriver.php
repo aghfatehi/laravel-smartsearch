@@ -17,9 +17,12 @@ class ElasticsearchDriver implements SearchDriver
 {
     private ClientInterface $client;
     private IndexMapper $mapper;
+    private string $analyzer;
 
     public function __construct(array $config = [], ?ClientInterface $client = null)
     {
+        $this->analyzer = $config['analyzer'] ?? 'standard';
+
         if ($client) {
             $this->client = $client;
         } else {
@@ -241,7 +244,7 @@ class ElasticsearchDriver implements SearchDriver
         $exists = $this->client->indices()->exists(['index' => $indexName]);
 
         if (!$exists->asBool()) {
-            $schema = $this->mapper->schema($model);
+            $schema = $this->mapper->schema($model, $this->analyzer);
             $this->client->indices()->create($schema);
         }
     }

@@ -12,7 +12,7 @@
 
 <h1 align="center">Laravel SmartSearch</h1>
 <p align="center">
-    <strong>Laravel search package</strong> — the most versatile <strong>full text search for Laravel</strong> with Elasticsearch, Scout, and database search.<br>
+    <strong>Laravel search package</strong> — the most versatile <strong>full text search for Laravel</strong> with OpenSearch, Elasticsearch, Scout, and database search.<br>
     Zero-config, production-safe, <strong>queue-driven search indexing</strong>. A powerful <strong>Eloquent search</strong> engine for your models.
 </p>
 
@@ -20,9 +20,9 @@
 
 ## What is Laravel SmartSearch?
 
-**Laravel SmartSearch** is a powerful, production-ready **Laravel search package** that provides a unified search API across **Elasticsearch**, **Laravel Scout**, and **database full-text search** — a true **Laravel Scout alternative** with more flexibility. Built by **Fatehi AL-AGHBARI**, it solves the common pain points teams face when adding search to Laravel applications — complex setup, vendor lock-in, and brittle fallback logic.
+**Laravel SmartSearch** is a powerful, production-ready **Laravel search package** that provides a unified search API across **OpenSearch**, **Elasticsearch**, **Laravel Scout**, and **database full-text search** — a true **Laravel Scout alternative** with more flexibility. Built by **Fatehi AL-AGHBARI**, it solves the common pain points teams face when adding search to Laravel applications — complex setup, vendor lock-in, and brittle fallback logic.
 
-Whether you need **Elasticsearch for Laravel**, a **Laravel Scout alternative**, or **database search for Laravel**, SmartSearch gives you one clean **Laravel search API** that works everywhere. The **Eloquent search** layer integrates directly with your models for zero-friction indexing.
+Whether you need **OpenSearch for Laravel**, **Elasticsearch for Laravel**, a **Laravel Scout alternative**, or **database search for Laravel**, SmartSearch gives you one clean **Laravel search API** that works everywhere. The **Eloquent search** layer integrates directly with your models for zero-friction indexing.
 
 ---
 

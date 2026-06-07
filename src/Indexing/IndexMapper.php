@@ -7,7 +7,7 @@ use Illuminate\Support\Str;
 
 class IndexMapper
 {
-    public function schema(Model $model): array
+    public function schema(Model $model, string $analyzer = 'standard'): array
     {
         $properties = [];
         $fields = $model->getSearchableFields();
@@ -25,7 +25,7 @@ class IndexMapper
                     'analysis' => [
                         'analyzer' => [
                             'smartsearch_analyzer' => [
-                                'type' => config('smartsearch.elasticsearch.analyzer', 'standard'),
+                                'type' => $analyzer,
                             ],
                         ],
                     ],

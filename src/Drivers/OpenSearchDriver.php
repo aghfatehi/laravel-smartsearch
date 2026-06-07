@@ -14,9 +14,12 @@ class OpenSearchDriver implements SearchDriver
 {
     private $client;
     private IndexMapper $mapper;
+    private string $analyzer;
 
     public function __construct(array $config = [], ?object $client = null)
     {
+        $this->analyzer = $config['analyzer'] ?? 'standard';
+
         if ($client) {
             $this->client = $client;
         } else {
@@ -237,7 +240,7 @@ class OpenSearchDriver implements SearchDriver
             return;
         }
 
-        $schema = $this->mapper->schema($model);
+        $schema = $this->mapper->schema($model, $this->analyzer);
         $this->client->indices()->create($schema);
     }
 
