@@ -1,5 +1,5 @@
 <p align="center">
- <a href="https://www.php.net/"><img src="https://img.shields.io/badge/php-^8.0-8892BF.svg?style=for-the-badge&logo=php" alt="PHP Version"></a>
+ <a href="https://www.php.net/"><img src="https://img.shields.io/badge/php-^8.1-8892BF.svg?style=for-the-badge&logo=php" alt="PHP Version"></a>
  <a href="https://laravel.com/"><img src="https://img.shields.io/badge/Laravel-9|10|11|12|13-FF2D20.svg?style=for-the-badge&logo=laravel" alt="Laravel Version"></a>
  <a href="#driver-system"><img src="https://img.shields.io/badge/Drivers-Elasticsearch_%2B_Scout_%2B_Database-00A859.svg?style=for-the-badge" alt="Drivers"></a>
  <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg?style=for-the-badge" alt="License"></a>
@@ -276,7 +276,7 @@ Laravel SmartSearch Layer
 
 ## Requirements
 
-- **PHP** 8.0+
+- **PHP** 8.1+
 - **Laravel** 9.x / 10.x / 11.x / 12.x / 13.x
 - **Database** MySQL / PostgreSQL / SQLite / SQL Server (any Laravel-supported database)
 - **Elasticsearch** 7.x+ (only if using the Elasticsearch driver — optional)

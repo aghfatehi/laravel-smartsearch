@@ -16,6 +16,13 @@ class ModelObserverTest extends TestCase
         $this->setUpProductTable();
     }
 
+    protected function tearDown(): void
+    {
+        restore_error_handler();
+        restore_exception_handler();
+        parent::tearDown();
+    }
+
     public function test_created_calls_index_on_driver_when_queue_disabled(): void
     {
         $this->app['config']->set('smartsearch.queue', false);
