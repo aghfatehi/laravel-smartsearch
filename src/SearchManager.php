@@ -40,6 +40,7 @@ class SearchManager implements SearchManagerContract
 
         $driver = match ($name) {
             'elasticsearch' => $this->createElasticsearchDriver(),
+            'opensearch' => $this->createOpenSearchDriver(),
             'database' => $this->createDatabaseDriver(),
             'scout' => $this->createScoutDriver(),
             default => throw new \InvalidArgumentException("Unknown search driver: {$name}"),
@@ -64,6 +65,14 @@ class SearchManager implements SearchManagerContract
             throw new \RuntimeException('Elasticsearch driver requires elasticsearch/elasticsearch package. Run: composer require elasticsearch/elasticsearch');
         }
         return new ElasticsearchDriver($this->config['elasticsearch'] ?? []);
+    }
+
+    private function createOpenSearchDriver(): \SmartSearch\Drivers\OpenSearchDriver
+    {
+        if (!class_exists(\OpenSearch\ClientBuilder::class)) {
+            throw new \RuntimeException('OpenSearch driver requires opensearch-project/opensearch-php package. Run: composer require opensearch-project/opensearch-php');
+        }
+        return new \SmartSearch\Drivers\OpenSearchDriver($this->config['opensearch'] ?? []);
     }
 
     private function createDatabaseDriver(): DatabaseDriver

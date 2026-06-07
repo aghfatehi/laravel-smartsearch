@@ -1,7 +1,7 @@
 <p align="center">
  <a href="https://www.php.net/"><img src="https://img.shields.io/badge/php-^8.1-8892BF.svg?style=for-the-badge&logo=php" alt="PHP Version"></a>
  <a href="https://laravel.com/"><img src="https://img.shields.io/badge/Laravel-9|10|11|12|13-FF2D20.svg?style=for-the-badge&logo=laravel" alt="Laravel Version"></a>
- <a href="#driver-system"><img src="https://img.shields.io/badge/Drivers-Elasticsearch_%2B_Scout_%2B_Database-00A859.svg?style=for-the-badge" alt="Drivers"></a>
+ <a href="#driver-system"><img src="https://img.shields.io/badge/Drivers-OpenSearch_%2B_Elasticsearch_%2B_Scout_%2B_Database-00A859.svg?style=for-the-badge" alt="Drivers"></a>
  <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg?style=for-the-badge" alt="License"></a>
  <a href="https://github.com/aghfatehi/laravel-smartsearch/actions"><img src="https://img.shields.io/github/actions/workflow/status/aghfatehi/laravel-smartsearch/tests.yml?style=for-the-badge&label=Tests&branch=main" alt="Tests"></a>
  <a href="https://packagist.org/packages/aghfatehi/laravel-smartsearch"><img src="https://img.shields.io/packagist/v/aghfatehi/laravel-smartsearch.svg?style=for-the-badge" alt="Packagist"></a>
@@ -53,7 +53,8 @@ Integrating **search for Laravel applications** often means:
 - **Eloquent search** — trait-based, integrates directly with your models
 - **Database search Laravel** — `LIKE` / `ILIKE` auto-detects MySQL, PostgreSQL, SQLite, SQL Server
 - **Elasticsearch for Laravel** — high-performance dedicated search, install only if needed
-- **Laravel Scout alternative** — drop-in compatible, works with Algolia, MeiliSearch, Typesense
+- **OpenSearch for Laravel** — open-source search engine, fully compatible API
+- **Laravel Scout bridge** — works with Algolia, MeiliSearch, Typesense through Scout
 - **Search indexing** — queue-driven on model `created`/`updated`/`deleted`
 - **Automatic safe fallback** — if Elasticsearch/Scout is down, falls back to database
 - **Arabic search for Laravel** — built-in normalization for Arabic content
@@ -68,22 +69,73 @@ Integrating **search for Laravel applications** often means:
 
 These features are **not** available in Elasticsearch or Laravel Scout alone. They are the unique value SmartSearch brings:
 
-| Feature | Elasticsearch Native | Laravel Scout Native | SmartSearch |
-|---------|----------------|-----------------|-------------|
-| **Single API across engines** | No — own query DSL only | No — Scout providers only (Algolia, MeiliSearch, Typesense) | Yes — works with database, Elasticsearch **and** Scout providers through one unified API |
-| **Standalone DB driver** | No | Requires Scout ecosystem | Yes — works as a standalone database driver without installing Scout or any other package |
-| **Queue auto-indexing** | No — you build it | Opt-in (`SCOUT_QUEUE=true` + config) | Yes — **enabled by default**, zero config, auto-dispatches queue jobs |
-| **Automatic fallback** | No — downtime = 503 | No — only pagination count fallback | Yes — configurable fallback driver when primary is unreachable |
-| **Arabic normalization** | Server-side only (index analyzer config) | No | Yes — PHP-level normalization (أ/إ/آ → ا, ة → ه, ى → ي) applied consistently across **all** drivers |
-| **First-class ES support** | N/A (is Elasticsearch) | Requires community driver (`laravel-scout-elastic`) | Yes — built-in Elasticsearch driver with full ClientBuilder config, no extra packages needed |
+| Feature | Elasticsearch Native | OpenSearch Native | Laravel Scout Native | SmartSearch |
+|---------|----------------|-----------------|-----------------|-------------|
+| **Single API across engines** | No | No | No — Scout providers only | Yes — database, OpenSearch, Elasticsearch, **and** Scout through one API |
+| **Standalone DB driver** | No | No | Requires Scout ecosystem | Yes — works standalone, no extra packages |
+| **Queue auto-indexing** | No — you build it | No — you build it | Opt-in (`SCOUT_QUEUE=true`) | Yes — **enabled by default**, zero config |
+| **Automatic fallback** | No — downtime = 503 | No — downtime = 503 | No — only pagination count fallback | Yes — configurable fallback driver |
+| **Arabic normalization** | Server-side only | Server-side only | No | Yes — PHP-level across **all** drivers |
+| **OpenSearch support** | No | N/A (is OpenSearch) | Requires community driver | Yes — built-in driver, no extra config |
+| **Elasticsearch support** | N/A (is Elasticsearch) | No | Requires community driver | Yes — built-in driver |
 
-SmartSearch is **not** "yet another way to call Elasticsearch or Scout." It is an **abstraction layer** that:
-- Unifies database, Elasticsearch, **and** Scout under one fluent API
-- Adds features neither engine provides alone (PHP-level Arabic normalization, driver fallback, queue-by-default indexing)
-- Gives Elasticsearch first-class support without community adapters
-- Lets you start searching in under a minute — then switch or upgrade engines later by changing one `.env` line
+SmartSearch is **not** "yet another wrapper." It is an **open-source abstraction layer** that:
+- Unifies database, OpenSearch, Elasticsearch, **and** Scout providers under one fluent API
+- Adds features no single engine provides alone (PHP-level Arabic normalization, driver fallback, queue-by-default indexing)
+- Gives OpenSearch and Elasticsearch first-class support — no community adapters needed
+- Lets you start with the free database driver, migrate to self-hosted OpenSearch, then scale to Elasticsearch or Scout providers — all by changing one `.env` line
 
 ---
+
+## Driver Architecture
+
+SmartSearch's Strategy Pattern lets you pick your search engine at runtime — no code changes, just swap the driver:
+
+```
+                          ┌─────────────────────────────┐
+                          │   Your Application Code     │
+                          │  Search::for(Product)       │
+                          │       ->query('phone')      │
+                          │       ->where('price','>',100)│
+                          │       ->get()               │
+                          └──────────┬──────────────────┘
+                                     │
+                          ┌──────────▼──────────────────┐
+                          │      SearchManager          │
+                          │  (routes to active driver)  │
+                          └──────────┬──────────────────┘
+                                     │
+              ┌──────────────────────┼──────────────────────┐
+              │                      │                      │
+    ┌─────────▼─────────┐  ┌────────▼────────┐  ┌─────────▼─────────┐
+    │   DatabaseDriver  │  │ OpenSearchDriver │  │ ElasticsearchDriver│
+    │ (مجاني - لا يحتاج  │  │ (مجاني - مفتوح    │  │ (سحابي/مدفوع -     │
+    │  أي خدمة خارجية)   │  │  المصدر - Self-  │  │ Elastic Cloud)     │
+    │                   │  │  Hosted)         │  │                   │
+    │ auto-detects      │  │ open-source     │  │ cloud_id / api_key│
+    │ LIKE / ILIKE      │  │ fork of ES      │  │                    │
+    └───────────────────┘  └──────────────────┘  └────────────────────┘
+                                     │
+                          ┌──────────▼──────────────────┐
+                          │        ScoutDriver          │
+                          │  (يربطك بكل providers Scout) │
+                          │                             │
+                          ├── Algolia (مدفوع)           │
+                          ├── MeiliSearch (مفتوح/سحابي)  │
+                          ├── Typesense (مفتوح/سحابي)     │
+                          └─────────────────────────────┘
+```
+
+| Driver | Cost | Setup Effort | Best For |
+|--------|------|-------------|----------|
+| `database` | Free | None (works immediately) | Small projects, MVPs, dev/testing |
+| `opensearch` | Free (self-hosted) | Medium | Production self-hosted search |
+| `elasticsearch` | Paid (Elastic Cloud) or self-hosted | Medium-High | Enterprise, Elastic Cloud |
+| `scout` | Varies by provider | Low (needs Scout + API keys) | Teams already using Scout providers |
+
+---
+
+## Installation
 
 ```bash
 composer require aghfatehi/laravel-smartsearch
@@ -95,7 +147,7 @@ Publish the config (optional):
 php artisan vendor:publish --tag=smartsearch-config
 ```
 
-> **Optional drivers**: To use **Elasticsearch for Laravel**, run `composer require elasticsearch/elasticsearch`. To use **Laravel Scout**, run `composer require laravel/scout`. The package handles both gracefully without breaking.
+> **Optional drivers**: To use **Elasticsearch**, run `composer require elasticsearch/elasticsearch`. To use **OpenSearch**, run `composer require opensearch-project/opensearch-php`. To use **Laravel Scout**, run `composer require laravel/scout`. The package handles all gracefully without breaking.
 
 ---
 
@@ -180,6 +232,67 @@ ELASTICSEARCH_ANALYZER=arabic    # Text analyzer (standard, arabic, english, etc
 ```
 
 > **Note:** The Elasticsearch client is bundled with the package — no extra `composer require` needed. Just set the environment variables above and it works.
+
+---
+
+## OpenSearch Setup
+
+To use the **OpenSearch for Laravel** driver, first install the client:
+
+```bash
+composer require opensearch-project/opensearch-php
+```
+
+Then set the driver in your `.env`:
+
+```env
+SMARTSEARCH_DRIVER=opensearch
+SMARTSEARCH_FALLBACK=database
+```
+
+### Connecting to OpenSearch
+
+OpenSearch uses the same HTTP API as Elasticsearch. The driver requires `opensearch-project/opensearch-php` but the setup is almost identical:
+
+**Local / self-hosted:**
+
+```env
+OPENSEARCH_HOSTS=https://localhost:9200
+OPENSEARCH_USER=admin
+OPENSEARCH_PASS=admin
+OPENSEARCH_SSL_VERIFY=false    # Self-signed certs in dev
+```
+
+**With API Key:**
+
+```env
+OPENSEARCH_HOSTS=https://opensearch-cluster:9200
+OPENSEARCH_API_KEY=base64encodedapikey
+```
+
+**Docker (OpenSearch official image):**
+
+```yaml
+# docker-compose.yml
+services:
+  opensearch:
+    image: opensearchproject/opensearch:latest
+    environment:
+      - discovery.type=single-node
+      - plugins.security.disabled=true    # Disable security for dev
+    ports:
+      - "9200:9200"
+```
+
+> **Note:** OpenSearch is the **open-source** fork of Elasticsearch — fully compatible API, Apache 2.0 license, no Elastic Cloud dependency. Perfect for self-hosted production search without licensing costs.
+
+### Additional Options
+
+```env
+OPENSEARCH_RETRIES=3          # Connection retries on failure
+OPENSEARCH_SSL_VERIFY=true    # SSL cert verification
+OPENSEARCH_ANALYZER=arabic    # Text analyzer (standard, arabic, english, etc.)
+```
 
 ---
 

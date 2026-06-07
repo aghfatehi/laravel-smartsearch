@@ -7,7 +7,7 @@ return [
     | Default Search Driver
     |--------------------------------------------------------------------------
     |
-    | The primary search driver. Supported: "database", "elasticsearch", "scout"
+    | The primary search driver. Supported: "database", "opensearch", "elasticsearch", "scout"
     |
     | Env: SMARTSEARCH_DRIVER
     | Default: "database" (works immediately, no extra dependencies)
@@ -85,6 +85,92 @@ return [
     |   ELASTICSEARCH_RETRIES=3
     |
     */
+    'opensearch' => [
+        /*
+        |--------------------------------------------------------------------------
+        | OpenSearch Hosts
+        |--------------------------------------------------------------------------
+        |
+        | Comma-separated list of OpenSearch node URLs.
+        | Example: "https://localhost:9200,https://opensearch-node2:9200"
+        |
+        | Env: OPENSEARCH_HOSTS
+        | Default: "localhost:9200"
+        |
+        */
+        'hosts' => explode(',', env('OPENSEARCH_HOSTS', 'localhost:9200')),
+
+        /*
+        |--------------------------------------------------------------------------
+        | OpenSearch Analyzer
+        |--------------------------------------------------------------------------
+        |
+        | The default text analyzer for OpenSearch.
+        | Common values: "standard", "arabic", "english", "french", etc.
+        |
+        | Env: OPENSEARCH_ANALYZER
+        | Default: "standard"
+        |
+        */
+        'analyzer' => env('OPENSEARCH_ANALYZER', 'standard'),
+
+        /*
+        |--------------------------------------------------------------------------
+        | Basic Authentication
+        |--------------------------------------------------------------------------
+        |
+        | Username and password for OpenSearch Basic Auth.
+        | Leave null if using API Key authentication instead.
+        |
+        | Env: OPENSEARCH_USER, OPENSEARCH_PASS
+        | Default: null
+        |
+        */
+        'user' => env('OPENSEARCH_USER'),
+        'pass' => env('OPENSEARCH_PASS'),
+
+        /*
+        |--------------------------------------------------------------------------
+        | API Key Authentication
+        |--------------------------------------------------------------------------
+        |
+        | Base64-encoded API key for OpenSearch. Takes precedence over
+        | Basic Auth if both are set.
+        |
+        | Env: OPENSEARCH_API_KEY
+        | Default: null
+        |
+        */
+        'api_key' => env('OPENSEARCH_API_KEY'),
+
+        /*
+        |--------------------------------------------------------------------------
+        | Connection Retries
+        |--------------------------------------------------------------------------
+        |
+        | Number of times to retry failed OpenSearch requests before giving up.
+        |
+        | Env: OPENSEARCH_RETRIES
+        | Default: 3
+        |
+        */
+        'retries' => env('OPENSEARCH_RETRIES', 3),
+
+        /*
+        |--------------------------------------------------------------------------
+        | SSL Verification
+        |--------------------------------------------------------------------------
+        |
+        | Enable or disable SSL certificate verification.
+        | Set to false only in local/development environments (self-signed certs).
+        |
+        | Env: OPENSEARCH_SSL_VERIFY
+        | Default: true
+        |
+        */
+        'ssl_verify' => env('OPENSEARCH_SSL_VERIFY', true),
+    ],
+
     'elasticsearch' => [
 
         /*

@@ -35,7 +35,8 @@
         "laravel/scout": "^9.0|^10.0|^11.0"
     },
     "suggest": {
-        "laravel/scout": "To use the Scout driver (Algolia, MeiliSearch, Typesense)"
+        "laravel/scout": "To use the Scout driver (Algolia, MeiliSearch, Typesense)",
+        "opensearch-project/opensearch-php": "To use the OpenSearch driver"
     },
     "autoload": {
         "psr-4": {
