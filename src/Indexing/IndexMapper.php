@@ -10,7 +10,7 @@ class IndexMapper
     public function schema(Model $model, string $analyzer = 'standard', ?int $vectorDimensions = null): array
     {
         $properties = [];
-        $fields = $model->getSearchableFields();
+        $fields = $model->getSmartSearchableFields();
 
         foreach ($fields as $field) {
             $properties[$field] = $this->resolveFieldMapping($model, $field);
@@ -26,7 +26,7 @@ class IndexMapper
         }
 
         return [
-            'index' => $model->getSearchIndexName(),
+            'index' => $model->getSmartSearchIndexName(),
             'body' => [
                 'settings' => [
                     'analysis' => [
@@ -48,7 +48,7 @@ class IndexMapper
     {
         $body = ['id' => (string) $model->getKey()];
 
-        foreach ($model->getSearchableFields() as $field) {
+        foreach ($model->getSmartSearchableFields() as $field) {
             $value = $model->{$field};
             $body[$field] = is_string($value)
                 ? \SmartSearch\Support\ArabicNormalizer::normalize($value)
@@ -56,7 +56,7 @@ class IndexMapper
         }
 
         return [
-            'index' => $model->getSearchIndexName(),
+            'index' => $model->getSmartSearchIndexName(),
             'id' => (string) $model->getKey(),
             'body' => $body,
         ];
@@ -65,7 +65,7 @@ class IndexMapper
     public function deletePayload(Model $model): array
     {
         return [
-            'index' => $model->getSearchIndexName(),
+            'index' => $model->getSmartSearchIndexName(),
             'id' => (string) $model->getKey(),
         ];
     }

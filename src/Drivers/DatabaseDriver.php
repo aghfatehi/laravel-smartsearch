@@ -88,7 +88,7 @@ class DatabaseDriver implements SearchDriver
 
         if ($builder->query) {
             $model = new $modelClass;
-            $fields = $model->getSearchableFields();
+            $fields = $model->getSmartSearchableFields();
 
             if (!empty($fields)) {
                 $searchTerm = $builder->query;

@@ -3,17 +3,17 @@
 namespace SmartSearch\Tests\Stubs;
 
 use Illuminate\Database\Eloquent\Model;
-use SmartSearch\Traits\Searchable;
+use SmartSearch\Traits\SmartSearchable;
 
 class Product extends Model
 {
-    use Searchable;
+    use SmartSearchable;
 
     protected $table = 'products';
     protected $guarded = [];
     public $timestamps = false;
 
-    protected $searchable = [
+    protected $smartSearchable = [
         'name',
         'description',
     ];

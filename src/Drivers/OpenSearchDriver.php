@@ -175,8 +175,8 @@ class OpenSearchDriver implements SearchDriver
 
     private function buildSearchParams(SearchQueryBuilder $builder, Model $model): array
     {
-        $fields = $model->getSearchableFields();
-        $indexName = $model->getSearchIndexName();
+        $fields = $model->getSmartSearchableFields();
+        $indexName = $model->getSmartSearchIndexName();
 
         $body = [];
 
@@ -265,7 +265,7 @@ class OpenSearchDriver implements SearchDriver
 
     private function ensureIndexExists(Model $model): void
     {
-        $indexName = $model->getSearchIndexName();
+        $indexName = $model->getSmartSearchIndexName();
         $exists = $this->client->indices()->exists(['index' => $indexName]);
 
         if ($exists->asBool()) {

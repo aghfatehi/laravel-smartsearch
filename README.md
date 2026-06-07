@@ -160,13 +160,13 @@ php artisan vendor:publish --tag=smartsearch-config
 ### 1. Add the trait to your model
 
 ```php
-use SmartSearch\Traits\Searchable;
+use SmartSearch\Traits\SmartSearchable;
 
 class Product extends Model
 {
-    use Searchable;
+    use SmartSearchable;
 
-    protected $searchable = ['name', 'description', 'price'];
+    protected $smartSearchable = ['name', 'description', 'price'];
 }
 ```
 
@@ -363,14 +363,18 @@ Schema::table('products', function ($table) {
 
 ### 3. Configure which fields to embed (optional)
 
-Override `searchableEmbeddings()` on your model — defaults to the same fields as `$searchable`:
+Override `searchableEmbeddings()` on your model — defaults to the same fields as `$smartSearchable`:
 
 ```php
+<?php
+
+use SmartSearch\Traits\SmartSearchable;
+
 class Property extends Model
 {
-    use Searchable;
+    use SmartSearchable;
 
-    protected array $searchable = ['title', 'description', 'city'];
+    protected array $smartSearchable = ['title', 'description', 'city'];
 
     public function searchableEmbeddings(): array
     {

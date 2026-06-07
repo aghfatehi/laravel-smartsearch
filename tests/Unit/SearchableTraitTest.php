@@ -10,7 +10,7 @@ class SearchableTraitTest extends TestCase
     public function test_trait_provides_searchable_fields(): void
     {
         $product = new Product();
-        $fields = $product->getSearchableFields();
+        $fields = $product->getSmartSearchableFields();
 
         $this->assertEquals(['name', 'description'], $fields);
     }
@@ -18,7 +18,7 @@ class SearchableTraitTest extends TestCase
     public function test_trait_provides_index_name(): void
     {
         $product = new Product();
-        $index = $product->getSearchIndexName();
+        $index = $product->getSmartSearchIndexName();
 
         $this->assertEquals('products', $index);
     }
@@ -34,9 +34,9 @@ class SearchableTraitTest extends TestCase
     public function test_searchable_fields_empty_when_not_defined(): void
     {
         $model = new class extends \Illuminate\Database\Eloquent\Model {
-            use \SmartSearch\Traits\Searchable;
+            use \SmartSearch\Traits\SmartSearchable;
         };
 
-        $this->assertEquals([], $model->getSearchableFields());
+        $this->assertEquals([], $model->getSmartSearchableFields());
     }
 }
