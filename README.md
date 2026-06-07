@@ -308,11 +308,3 @@ If this **Laravel search package** helps you:
 ## License
 
 MIT License. Free for personal and commercial use.
-
----
-
-<p align="center">
- <a href="https://packagist.org/packages/aghfatehi/laravel-smartsearch"><img src="https://img.shields.io/badge/Packagist-aghfatehi%2Flaravel--smartsearch-blue.svg?style=for-the-badge" alt="Packagist"></a>
- <a href="https://fsoftdev.com"><img src="https://img.shields.io/badge/FsoftDev-FsoftDev.com-blue.svg?style=for-the-badge" alt="FsoftDev"></a>
- <a href="https://github.com/aghfatehi"><img src="https://img.shields.io/badge/Author-AL--AGHBARI%20Fatehi-blue.svg?style=for-the-badge" alt="Author"></a>
-</p>
