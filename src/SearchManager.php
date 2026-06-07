@@ -8,6 +8,7 @@ use SmartSearch\Contracts\SearchDriver;
 use SmartSearch\Contracts\SearchManager as SearchManagerContract;
 use SmartSearch\Drivers\DatabaseDriver;
 use SmartSearch\Drivers\ElasticsearchDriver;
+use SmartSearch\Drivers\OpenSearchDriver;
 
 class SearchManager implements SearchManagerContract
 {
@@ -67,12 +68,12 @@ class SearchManager implements SearchManagerContract
         return new ElasticsearchDriver($this->config['elasticsearch'] ?? []);
     }
 
-    private function createOpenSearchDriver(): \SmartSearch\Drivers\OpenSearchDriver
+    private function createOpenSearchDriver(): OpenSearchDriver
     {
         if (!class_exists(\OpenSearch\ClientBuilder::class)) {
             throw new \RuntimeException('OpenSearch driver requires opensearch-project/opensearch-php package. Run: composer require opensearch-project/opensearch-php');
         }
-        return new \SmartSearch\Drivers\OpenSearchDriver($this->config['opensearch'] ?? []);
+        return new OpenSearchDriver($this->config['opensearch'] ?? []);
     }
 
     private function createDatabaseDriver(): DatabaseDriver
