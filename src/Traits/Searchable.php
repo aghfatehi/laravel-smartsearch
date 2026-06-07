@@ -9,7 +9,9 @@ trait Searchable
 {
     public static function bootSearchable(): void
     {
-        static::observe(ModelObserver::class);
+        static::created(fn ($model) => app(ModelObserver::class)->created($model));
+        static::updated(fn ($model) => app(ModelObserver::class)->updated($model));
+        static::deleted(fn ($model) => app(ModelObserver::class)->deleted($model));
     }
 
     public function getSearchableFields(): array
