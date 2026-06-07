@@ -25,7 +25,7 @@ class SearchableTraitTest extends TestCase
 
     public function test_trait_provides_static_search_method(): void
     {
-        $builder = Product::search('test');
+        $builder = Product::smartSearch('test');
 
         $this->assertInstanceOf(\SmartSearch\Builders\SearchQueryBuilder::class, $builder);
         $this->assertEquals('test', $builder->query);

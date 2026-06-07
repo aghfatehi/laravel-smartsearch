@@ -499,7 +499,7 @@ $results = SmartSearch::for(Product::class)
 ### Eloquent-style shortcut
 
 ```php
-Product::search('iphone')->get();
+Product::smartSearch('iphone')->get();
 ```
 
 ### Helper function

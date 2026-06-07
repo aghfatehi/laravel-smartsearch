@@ -30,7 +30,7 @@ trait SmartSearchable
         return $prefix . $this->getTable();
     }
 
-    public static function search(string $query): SearchQueryBuilder
+    public static function smartSearch(?string $query = null): SearchQueryBuilder
     {
         return app(\SmartSearch\Contracts\SmartSearchManager::class)
             ->for(static::class)

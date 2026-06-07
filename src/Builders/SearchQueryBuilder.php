@@ -27,7 +27,7 @@ class SearchQueryBuilder
         $this->fallbackDriver = $fallback;
     }
 
-    public function query(string $query): self
+    public function query(?string $query): self
     {
         $this->query = $query;
         return $this;

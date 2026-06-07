@@ -54,7 +54,7 @@ class SmartSearchFacadeTest extends TestCase
     {
         Product::create(['name' => 'iPad', 'description' => 'Apple tablet', 'price' => 3000]);
 
-        $results = Product::search('iPad')->get();
+        $results = Product::smartSearch('iPad')->get();
 
         $this->assertCount(1, $results);
         $this->assertEquals('iPad', $results->first()->name);
