@@ -25,18 +25,19 @@
         "php": "^8.1",
         "illuminate/support": "^9.0|^10.0|^11.0|^12.0|^13.0",
         "illuminate/database": "^9.0|^10.0|^11.0|^12.0|^13.0",
-        "illuminate/queue": "^9.0|^10.0|^11.0|^12.0|^13.0",
-        "elasticsearch/elasticsearch": "^9.0"
+        "illuminate/queue": "^9.0|^10.0|^11.0|^12.0|^13.0"
     },
     "require-dev": {
         "orchestra/testbench": "^7.0|^8.0|^9.0|^10.0|^11.0",
         "phpunit/phpunit": "^9.0|^10.0|^11.0",
         "mockery/mockery": "^1.5",
-        "laravel/scout": "^9.0|^10.0|^11.0"
+        "laravel/scout": "^9.0|^10.0|^11.0",
+        "elasticsearch/elasticsearch": "^9.0"
     },
     "suggest": {
-        "laravel/scout": "To use the Scout driver (Algolia, MeiliSearch, Typesense)",
-        "opensearch-project/opensearch-php": "To use the OpenSearch driver"
+        "elasticsearch/elasticsearch": "Required for the Elasticsearch driver. Run: composer require elasticsearch/elasticsearch",
+        "opensearch-project/opensearch-php": "Required for the OpenSearch driver. Run: composer require opensearch-project/opensearch-php",
+        "laravel/scout": "Required for the Scout driver. Run: composer require laravel/scout"
     },
     "autoload": {
         "psr-4": {

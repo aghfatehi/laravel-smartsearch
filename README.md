@@ -125,17 +125,31 @@ ScoutDriver providers:
 
 ## Installation
 
+### Core package
+
 ```bash
 composer require aghfatehi/laravel-smartsearch
 ```
 
-Publish the config (optional):
+This installs the core package with the **database driver** only — no extra dependencies, no conflicts.
+
+### Optional driver packages
+
+The `database` driver works immediately. For other search engines, install the corresponding package:
+
+| Engine | Command | Required for |
+|--------|---------|-------------|
+| **Elasticsearch** | `composer require elasticsearch/elasticsearch` | `SMARTSEARCH_DRIVER=elasticsearch` |
+| **OpenSearch** | `composer require opensearch-project/opensearch-php` | `SMARTSEARCH_DRIVER=opensearch` |
+| **Scout** (Algolia / MeiliSearch / Typesense) | `composer require laravel/scout` | `SMARTSEARCH_DRIVER=scout` |
+
+The package auto-detects which drivers are installed — missing packages just mean that driver throws a clear error message if used.
+
+### Publish config (optional)
 
 ```bash
 php artisan vendor:publish --tag=smartsearch-config
 ```
-
-> **Optional drivers**: To use **Elasticsearch**, run `composer require elasticsearch/elasticsearch`. To use **OpenSearch**, run `composer require opensearch-project/opensearch-php`. To use **Laravel Scout**, run `composer require laravel/scout`. The package handles all gracefully without breaking.
 
 ---
 
@@ -219,7 +233,7 @@ ELASTICSEARCH_SSL_VERIFY=true    # SSL cert verification
 ELASTICSEARCH_ANALYZER=arabic    # Text analyzer (standard, arabic, english, etc.)
 ```
 
-> **Note:** The Elasticsearch client is bundled with the package — no extra `composer require` needed. Just set the environment variables above and it works.
+> **Note:** The Elasticsearch driver requires a separate install: `composer require elasticsearch/elasticsearch`. The package detects its presence automatically.
 
 ---
 
