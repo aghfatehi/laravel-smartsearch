@@ -3,6 +3,18 @@
     "description": "Laravel SmartSearch by Fatehi AL-AGHBARI — production-grade search abstraction layer for Laravel with Elasticsearch, Scout, and database fallback. Unified search API, automatic indexing, Arabic/multilingual support, queue-driven, safe fallback. The most flexible Laravel search package for Eloquent models.",
     "type": "library",
     "license": "MIT",
+    "keywords": [
+        "laravel search package",
+        "elasticsearch for laravel",
+        "laravel scout alternative",
+        "full text search laravel",
+        "database search laravel",
+        "arabic search laravel",
+        "multilingual search",
+        "search indexing",
+        "eloquent search",
+        "laravel search api"
+    ],
     "authors": [
         {
             "name": "Fatehi AL-AGHBARI",

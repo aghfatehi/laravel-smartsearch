@@ -12,17 +12,17 @@
 
 <h1 align="center">Laravel SmartSearch</h1>
 <p align="center">
-    <strong>The most versatile Laravel search package</strong> - Elasticsearch, Scout, or database fallback.<br>
-    Zero-config, production-safe, queue-driven indexing.
+    <strong>Laravel search package</strong> — the most versatile <strong>full text search for Laravel</strong> with Elasticsearch, Scout, and database search.<br>
+    Zero-config, production-safe, <strong>queue-driven search indexing</strong>. A powerful <strong>Eloquent search</strong> engine for your models.
 </p>
 
 ---
 
 ## What is Laravel SmartSearch?
 
-**Laravel SmartSearch** is a powerful, production-ready **Laravel search package** that provides a unified search API across **Elasticsearch**, **Laravel Scout**, and **database full-text search**. Built by **Fatehi AL-AGHBARI**, it solves the common pain points teams face when adding search to Laravel applications - complex setup, vendor lock-in, and brittle fallback logic.
+**Laravel SmartSearch** is a powerful, production-ready **Laravel search package** that provides a unified search API across **Elasticsearch**, **Laravel Scout**, and **database full-text search** — a true **Laravel Scout alternative** with more flexibility. Built by **Fatehi AL-AGHBARI**, it solves the common pain points teams face when adding search to Laravel applications — complex setup, vendor lock-in, and brittle fallback logic.
 
-Whether you need **Elasticsearch Laravel integration**, a **Laravel Scout alternative**, or a **database-driven search fallback**, SmartSearch gives you one clean API that works everywhere.
+Whether you need **Elasticsearch for Laravel**, a **Laravel Scout alternative**, or **database search for Laravel**, SmartSearch gives you one clean **Laravel search API** that works everywhere. The **Eloquent search** layer integrates directly with your models for zero-friction indexing.
 
 ---
 
@@ -48,23 +48,25 @@ Integrating **search for Laravel applications** often means:
 
 ## Features
 
-- **Unified Laravel search API** - `Search::for(Model::class)->query('term')->get()`
-- **Works out of the box** - no extra packages required, database driver is default
-- **Database search** - `LIKE` / `ILIKE` (auto-detects MySQL, PostgreSQL, SQLite, SQL Server)
-- **Elasticsearch driver** - optional, install only if needed
-- **Laravel Scout driver** - optional, drop-in compatible
-- **Auto indexing** - queue-driven on model `created`/`updated`/`deleted`
-- **Automatic safe fallback** - if Elasticsearch/Scout is down, falls back to database
-- **Arabic & multilingual support** - normalization, configurable analyzers
-- **Driver-based architecture** - Strategy Pattern, extensible
-- **Works with any database** - MySQL, PostgreSQL, SQLite, SQL Server - no breaking changes
-- **Laravel 9 / 10 / 11 / 12 / 13** - full backward compatibility
+- **Unified Laravel search API** — `Search::for(Model::class)->query('term')->get()`
+- **Full text search for Laravel** — works out of the box with database search, no extra packages
+- **Eloquent search** — trait-based, integrates directly with your models
+- **Database search Laravel** — `LIKE` / `ILIKE` auto-detects MySQL, PostgreSQL, SQLite, SQL Server
+- **Elasticsearch for Laravel** — high-performance dedicated search, install only if needed
+- **Laravel Scout alternative** — drop-in compatible, works with Algolia, MeiliSearch, Typesense
+- **Search indexing** — queue-driven on model `created`/`updated`/`deleted`
+- **Automatic safe fallback** — if Elasticsearch/Scout is down, falls back to database
+- **Arabic search for Laravel** — built-in normalization for Arabic content
+- **Multilingual search** — configurable analyzers for any language
+- **Driver-based architecture** — Strategy Pattern, extensible
+- **Works with any database** — MySQL, PostgreSQL, SQLite, SQL Server, no breaking changes
+- **Laravel 9 / 10 / 11 / 12 / 13** — full backward compatibility
 
 ---
 
 ## Installation
 
-**No extra dependencies required.** The package works immediately with database search.
+**No extra dependencies required.** This **Laravel search package** works immediately with database search.
 
 ```bash
 composer require aghfatehi/laravel-smartsearch
@@ -76,7 +78,7 @@ Publish the config (optional):
 php artisan vendor:publish --tag=smartsearch-config
 ```
 
-> **Optional drivers**: To use Elasticsearch, run `composer require elasticsearch/elasticsearch`. To use Scout, run `composer require laravel/scout`. The package handles both gracefully without breaking.
+> **Optional drivers**: To use **Elasticsearch for Laravel**, run `composer require elasticsearch/elasticsearch`. To use **Laravel Scout**, run `composer require laravel/scout`. The package handles both gracefully without breaking.
 
 ---
 
@@ -189,7 +191,7 @@ The database driver auto-detects your database engine:
 
 ## Arabic & Multilingual Search
 
-Built-in **Arabic text normalization** for search indexing:
+Full **Arabic search for Laravel** and **multilingual search** support out of the box:
 
 ```php
 use SmartSearch\Support\ArabicNormalizer;
@@ -265,12 +267,12 @@ Laravel SmartSearch Layer
 
 ## Use Cases
 
-- **E-commerce search** - product search with filters and faceting
-- **ERP systems** - search across invoices, customers, orders
-- **SaaS platforms** - multi-tenant search (coming soon)
-- **Real estate listings** - full-text property search
-- **Document management** - search titles, descriptions, content
-- **Arabic content platforms** - normalized Arabic search
+- **E-commerce search** — product search with filters and faceting
+- **ERP systems** — search across invoices, customers, orders
+- **SaaS platforms** — multi-tenant search (coming soon)
+- **Real estate listings** — full-text property search
+- **Document management** — search titles, descriptions, content
+- **Arabic content platforms** — normalized Arabic search for Laravel
 
 ---
 
@@ -295,10 +297,11 @@ Laravel SmartSearch Layer
 
 ## Support
 
-If this Laravel search package helps you:
+If this **Laravel search package** helps you:
 - Star the repository on GitHub
 - Report issues
 - Share with the Laravel community
+- Looking for an **Elasticsearch Laravel** or **database search** solution? This is it.
 
 ---
 
