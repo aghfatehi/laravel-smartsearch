@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Log;
 use SmartSearch\Builders\SearchQueryBuilder;
+use SmartSearch\Contracts\EmbeddingProvider;
 use SmartSearch\Contracts\SearchDriver;
 use SmartSearch\Indexing\IndexMapper;
 
@@ -18,10 +19,12 @@ class ElasticsearchDriver implements SearchDriver
     private ClientInterface $client;
     private IndexMapper $mapper;
     private string $analyzer;
+    private ?EmbeddingProvider $embeddingProvider;
 
-    public function __construct(array $config = [], ?ClientInterface $client = null)
+    public function __construct(array $config = [], ?ClientInterface $client = null, ?EmbeddingProvider $embeddingProvider = null)
     {
         $this->analyzer = $config['analyzer'] ?? 'standard';
+        $this->embeddingProvider = $embeddingProvider;
 
         if ($client) {
             $this->client = $client;
@@ -102,6 +105,13 @@ class ElasticsearchDriver implements SearchDriver
     {
         $payload = $this->mapper->document($model);
 
+        if ($this->embeddingProvider) {
+            $embeddingText = $this->resolveEmbeddingText($model);
+            if ($embeddingText !== null) {
+                $payload['body']['embedding'] = $this->embeddingProvider->embedText($embeddingText);
+            }
+        }
+
         try {
             $this->ensureIndexExists($model);
             $this->client->index($payload);
@@ -114,6 +124,25 @@ class ElasticsearchDriver implements SearchDriver
             ]);
             throw $e;
         }
+    }
+
+    private function resolveEmbeddingText(Model $model): ?string
+    {
+        if (!method_exists($model, 'searchableEmbeddings')) {
+            return null;
+        }
+
+        $fields = $model->searchableEmbeddings();
+        if (empty($fields)) {
+            return null;
+        }
+
+        $parts = [];
+        foreach ($fields as $field) {
+            $parts[] = (string) $model->{$field};
+        }
+
+        return implode(' ', $parts);
     }
 
     public function delete(Model $model): void
@@ -165,6 +194,11 @@ class ElasticsearchDriver implements SearchDriver
         return 'elasticsearch';
     }
 
+    public function supportsVectorSearch(): bool
+    {
+        return $this->embeddingProvider !== null;
+    }
+
     private function buildSearchParams(SearchQueryBuilder $builder, Model $model): array
     {
         $fields = $model->getSearchableFields();
@@ -199,6 +233,17 @@ class ElasticsearchDriver implements SearchDriver
             }
         }
 
+        if ($builder->similarTo !== null) {
+            $this->assertVectorSearchEnabled();
+            $queryVector = $this->embeddingProvider->embedText($builder->similarTo);
+            $body['knn'] = [
+                'field' => 'embedding',
+                'query_vector' => $queryVector,
+                'k' => ($builder->limit ?? 10) * 2,
+                'num_candidates' => 100,
+            ];
+        }
+
         $params = [
             'index' => $indexName,
             'body' => $body,
@@ -213,6 +258,13 @@ class ElasticsearchDriver implements SearchDriver
         }
 
         return $params;
+    }
+
+    private function assertVectorSearchEnabled(): void
+    {
+        if (!$this->embeddingProvider) {
+            throw new \RuntimeException('Vector search requires SMARTSEARCH_EMBEDDINGS_ENABLED=true and a running embedding provider (Ollama).');
+        }
     }
 
     private function buildFilters(array $wheres): array
@@ -244,7 +296,8 @@ class ElasticsearchDriver implements SearchDriver
         $exists = $this->client->indices()->exists(['index' => $indexName]);
 
         if (!$exists->asBool()) {
-            $schema = $this->mapper->schema($model, $this->analyzer);
+            $vectorDim = $this->embeddingProvider ? $this->embeddingProvider->dimensions() : null;
+            $schema = $this->mapper->schema($model, $this->analyzer, $vectorDim);
             $this->client->indices()->create($schema);
         }
     }

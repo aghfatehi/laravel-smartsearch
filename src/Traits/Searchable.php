@@ -19,6 +19,11 @@ trait Searchable
         return property_exists($this, 'searchable') ? $this->searchable : [];
     }
 
+    public function searchableEmbeddings(): array
+    {
+        return $this->getSearchableFields();
+    }
+
     public function getSearchIndexName(): string
     {
         $prefix = config('smartsearch.index_prefix', '');

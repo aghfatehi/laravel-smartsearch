@@ -295,5 +295,113 @@ return [
     | Default: "" (no prefix)
     |
     */
+    /*
+    |--------------------------------------------------------------------------
+    | Embeddings / Semantic Search
+    |--------------------------------------------------------------------------
+    |
+    | When enabled, the package generates vector embeddings for model content
+    | and supports similarTo() semantic search. Requires an embedding provider.
+    |
+    | Env: SMARTSEARCH_EMBEDDINGS_ENABLED
+    | Default: false
+    |
+    */
+    'embeddings' => [
+        /*
+        |--------------------------------------------------------------------------
+        | Enable Embeddings
+        |--------------------------------------------------------------------------
+        |
+        | Set to true to enable vector embeddings and semantic search.
+        | When false (default), similarTo() throws a clear exception.
+        | Environment variable: SMARTSEARCH_EMBEDDINGS_ENABLED
+        |
+        */
+        'enabled' => env('SMARTSEARCH_EMBEDDINGS_ENABLED', false),
+
+        /*
+        |--------------------------------------------------------------------------
+        | Embedding Provider
+        |--------------------------------------------------------------------------
+        |
+        | The provider to use for generating embeddings.
+        | Supported: "ollama"
+        |
+        */
+        'provider' => env('SMARTSEARCH_EMBEDDINGS_PROVIDER', 'ollama'),
+
+        /*
+        |--------------------------------------------------------------------------
+        | Embedding Model
+        |--------------------------------------------------------------------------
+        |
+        | The model name used by the provider.
+        | For Ollama: "nomic-embed-text", "all-minilm", "mxbai-embed-large", etc.
+        | See available models: https://ollama.com/search?c=embedding
+        |
+        | Env: SMARTSEARCH_EMBEDDINGS_MODEL
+        | Default: "nomic-embed-text"
+        |
+        */
+        'model' => env('SMARTSEARCH_EMBEDDINGS_MODEL', 'nomic-embed-text'),
+
+        /*
+        |--------------------------------------------------------------------------
+        | Ollama Host
+        |--------------------------------------------------------------------------
+        |
+        | The URL of your Ollama server.
+        | - Local install: http://localhost:11434
+        | - Docker: http://ollama:11434 (if service name is "ollama")
+        | - Remote: http://your-server:11434
+        |
+        | Env: SMARTSEARCH_EMBEDDINGS_HOST
+        | Default: "http://localhost:11434"
+        |
+        */
+        'host' => env('SMARTSEARCH_EMBEDDINGS_HOST', 'http://localhost:11434'),
+
+        /*
+        |--------------------------------------------------------------------------
+        | Embedding Dimensions
+        |--------------------------------------------------------------------------
+        |
+        | Vector dimensions for the model in use. If not set, the provider
+        | auto-detects by running a test embedding on first call.
+        | Common values: 768 (nomic-embed-text), 384 (all-minilm), 1024 (mxbai-embed-large)
+        |
+        | Env: SMARTSEARCH_EMBEDDINGS_DIMENSIONS
+        | Default: null (auto-detect)
+        |
+        */
+        'dimensions' => env('SMARTSEARCH_EMBEDDINGS_DIMENSIONS'),
+
+        /*
+        |--------------------------------------------------------------------------
+        | Request Timeout
+        |--------------------------------------------------------------------------
+        |
+        | Timeout in seconds for embedding API requests.
+        |
+        | Env: SMARTSEARCH_EMBEDDINGS_TIMEOUT
+        | Default: 30
+        |
+        */
+        'timeout' => env('SMARTSEARCH_EMBEDDINGS_TIMEOUT', 30),
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Index Prefix
+    |--------------------------------------------------------------------------
+    |
+    | Prefix added to all search index names. Useful for multi-tenant setups
+    | or when sharing a single search cluster across environments.
+    |
+    | Env: SMARTSEARCH_INDEX_PREFIX
+    | Default: "" (no prefix)
+    |
+    */
     'index_prefix' => env('SMARTSEARCH_INDEX_PREFIX', ''),
 ];

@@ -14,6 +14,8 @@ class SearchQueryBuilder
     public array $orders = [];
     public ?int $limit = null;
     public ?int $offset = null;
+    public ?string $similarTo = null;
+    public float $hybridWeight = 0.5;
 
     private SearchDriver $driver;
     private ?SearchDriver $fallbackDriver;
@@ -28,6 +30,13 @@ class SearchQueryBuilder
     public function query(string $query): self
     {
         $this->query = $query;
+        return $this;
+    }
+
+    public function similarTo(string $text, float $weight = 0.5): self
+    {
+        $this->similarTo = $text;
+        $this->hybridWeight = max(0.0, min(1.0, $weight));
         return $this;
     }
 

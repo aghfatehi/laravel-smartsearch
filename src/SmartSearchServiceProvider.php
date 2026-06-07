@@ -5,7 +5,6 @@ namespace SmartSearch;
 use Illuminate\Support\ServiceProvider;
 use SmartSearch\Contracts\SearchDriver;
 use SmartSearch\Contracts\SearchManager as SearchManagerContract;
-use SmartSearch\Facades\Search;
 
 class SmartSearchServiceProvider extends ServiceProvider
 {

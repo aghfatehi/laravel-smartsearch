@@ -43,6 +43,11 @@ class ScoutDriver implements SearchDriver
         return 'scout';
     }
 
+    public function supportsVectorSearch(): bool
+    {
+        return false;
+    }
+
     private function buildScoutQuery(SearchQueryBuilder $builder)
     {
         $modelClass = $builder->modelClass;

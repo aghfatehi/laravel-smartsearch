@@ -38,7 +38,8 @@
     "suggest": {
         "elasticsearch/elasticsearch": "Required for the Elasticsearch driver. Run: composer require elasticsearch/elasticsearch",
         "opensearch-project/opensearch-php": "Required for the OpenSearch driver. Run: composer require opensearch-project/opensearch-php",
-        "laravel/scout": "Required for the Scout driver. Run: composer require laravel/scout"
+        "laravel/scout": "Required for the Scout driver. Run: composer require laravel/scout",
+        "ollama/ollama": "Local embedding server for semantic search. Install: https://ollama.com"
     },
     "autoload": {
         "psr-4": {

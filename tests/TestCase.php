@@ -36,6 +36,7 @@ class TestCase extends Orchestra
             $table->string('name');
             $table->text('description')->nullable();
             $table->decimal('price', 10, 2)->default(0);
+            $table->text('embedding')->nullable();
         });
     }
 }

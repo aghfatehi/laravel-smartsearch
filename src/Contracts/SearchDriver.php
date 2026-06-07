@@ -15,4 +15,5 @@ interface SearchDriver
     public function delete(Model $model): void;
     public function bulkIndex(Collection $models): void;
     public function getName(): string;
+    public function supportsVectorSearch(): bool;
 }

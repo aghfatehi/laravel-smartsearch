@@ -298,6 +298,116 @@ OPENSEARCH_ANALYZER=arabic    # Text analyzer (standard, arabic, english, etc.)
 
 ---
 
+## Semantic Search (Embeddings + Vector Search)
+
+SmartSearch supports **semantic search** using vector embeddings — it understands meaning, not just keywords. This is powered by [Ollama](https://ollama.com) (free, local, no API keys).
+
+### How it works
+
+```
+SMARTSEARCH_EMBEDDINGS_ENABLED=true
+SMARTSEARCH_EMBEDDINGS_PROVIDER=ollama
+SMARTSEARCH_EMBEDDINGS_MODEL=nomic-embed-text
+SMARTSEARCH_EMBEDDINGS_HOST=http://localhost:11434
+```
+
+| Setting | Default | Description |
+|---------|---------|-------------|
+| `SMARTSEARCH_EMBEDDINGS_ENABLED` | `false` | Set to `true` to enable semantic search |
+| `SMARTSEARCH_EMBEDDINGS_PROVIDER` | `ollama` | Embedding provider (only `ollama` currently) |
+| `SMARTSEARCH_EMBEDDINGS_MODEL` | `nomic-embed-text` | Model — see [ollama embeddings](https://ollama.com/search?c=embedding) |
+| `SMARTSEARCH_EMBEDDINGS_HOST` | `http://localhost:11434` | Ollama server URL (Docker: `http://ollama:11434`) |
+| `SMARTSEARCH_EMBEDDINGS_DIMENSIONS` | auto | Vector dimensions (768 for nomic-embed-text) |
+| `SMARTSEARCH_EMBEDDINGS_TIMEOUT` | `30` | Request timeout in seconds |
+
+### 1. Install and run Ollama
+
+```bash
+# Install Ollama: https://ollama.com
+
+# Pull an embedding model
+ollama pull nomic-embed-text
+
+# Run the server (starts automatically on install)
+ollama serve
+```
+
+Docker:
+```yaml
+services:
+  ollama:
+    image: ollama/ollama:latest
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_data:/root/.ollama
+```
+
+```bash
+docker compose exec ollama ollama pull nomic-embed-text
+```
+
+### 2. Add embedding column to your model's table
+
+```php
+Schema::table('products', function ($table) {
+    $table->text('embedding')->nullable();
+});
+```
+
+### 3. Configure which fields to embed (optional)
+
+Override `searchableEmbeddings()` on your model — defaults to the same fields as `$searchable`:
+
+```php
+class Property extends Model
+{
+    use Searchable;
+
+    protected array $searchable = ['title', 'description', 'city'];
+
+    public function searchableEmbeddings(): array
+    {
+        return ['title', 'description', 'city', 'neighborhood'];
+    }
+}
+```
+
+### 4. Enable auto-indexing
+
+Set `SMARTSEARCH_EMBEDDINGS_ENABLED=true` in your `.env`. The package will generate embeddings for your models automatically on save (via queue jobs).
+
+### 5. Search semantically
+
+```php
+// Full-text + semantic combined (hybrid)
+Search::for(Property::class)
+    ->query('شقة في الرياض')
+    ->similarTo('قريبة من المدارس والخدمات')  // ← semantic search
+    ->where('price', '<', 1000000)
+    ->get();
+```
+
+The `similarTo()` method accepts an optional weight parameter that controls the balance between full-text and semantic results:
+
+```php
+// 30% full-text, 70% semantic
+->similarTo('قريبة من المدارس', weight: 0.3)
+```
+
+### Driver compatibility
+
+| Driver | Vector Search | Mechanism |
+|--------|:------------:|-----------|
+| `database` | Yes | Cosine similarity in PHP (TEXT column) |
+| `opensearch` | Yes | k-NN query on `dense_vector` field |
+| `elasticsearch` | Yes | `knn` query on `dense_vector` field |
+| `scout` | No | Depends on Scout provider |
+
+**Zero-cost semantic search:** With `database` driver + Ollama locally, you get AI-powered search for $0 — no API fees, no external services.
+
+---
+
 ## Scout Driver
 
 To use the Scout driver, you first install and configure [Laravel Scout](https://laravel.com/docs/scout) normally — it has its own `.env` variables and `config/scout.php` settings independent of SmartSearch:

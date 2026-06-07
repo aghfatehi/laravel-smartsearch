@@ -7,7 +7,7 @@ use Illuminate\Support\Str;
 
 class IndexMapper
 {
-    public function schema(Model $model, string $analyzer = 'standard'): array
+    public function schema(Model $model, string $analyzer = 'standard', ?int $vectorDimensions = null): array
     {
         $properties = [];
         $fields = $model->getSearchableFields();
@@ -17,6 +17,13 @@ class IndexMapper
         }
 
         $properties['id'] = ['type' => 'keyword'];
+
+        if ($vectorDimensions !== null) {
+            $properties['embedding'] = [
+                'type' => 'dense_vector',
+                'dims' => $vectorDimensions,
+            ];
+        }
 
         return [
             'index' => $model->getSearchIndexName(),
