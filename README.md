@@ -89,51 +89,37 @@ SmartSearch is **not** "yet another wrapper." It is an **open-source abstraction
 
 ## Driver Architecture
 
-SmartSearch decouples your application from the search engine. Your code writes queries once — the active driver handles execution:
+SmartSearch decouples your application from the search engine. The architecture has three layers — your code, the manager, and the drivers:
 
-```
-                        ┌──────────────────────────┐
-                        │     Application Code     │
-                        │  Search::for(Product)    │
-                        │    ->query('phone')      │
-                        │    ->where('price','>',100)│
-                        │    ->get()               │
-                        └───────────┬──────────────┘
-                                    │
-                        ┌───────────▼──────────────┐
-                        │       SearchManager      │
-                        │  Routes to active driver │
-                        └──────┬──────────┬────────┘
-                               │          │
-                     ┌─────────┘          └─────────┐
-                     ▼                               ▼
-          ┌─────────────────────┐     ┌─────────────────────┐
-          │   Standalone        │     │    Bridge           │
-          │   (native engines)  │     │    (third-party)    │
-          │                     │     │                     │
-          │  DatabaseDriver     │     │  ScoutDriver        │
-          │  ▸ LIKE / ILIKE     │     │  ▸ Algolia          │
-          │  ▸ No setup needed  │     │  ▸ MeiliSearch      │
-          │  ▸ Free             │     │  ▸ Typesense        │
-          │                     │     │                     │
-          │  OpenSearchDriver   │     └─────────────────────┘
-          │  ▸ Self-hosted      │
-          │  ▸ Open source      │
-          │  ▸ Free             │
-          │                     │
-          │  ElasticsearchDriver│
-          │  ▸ Elastic Cloud    │
-          │  ▸ Self-hosted      │
-          │  ▸ Enterprise       │
-          └─────────────────────┘
+### Layer 1 — Your Code (unified API, never changes)
+
+```php
+Search::for(Product::class)->query('phone')->where('price', '>', 100)->get();
 ```
 
-| Driver | Cost | Setup | Best For |
-|--------|------|-------|----------|
-| `database` | Free | None — works immediately | MVPs, dev/testing, small projects |
-| `opensearch` | Free | Self-hosted (Docker) | Production self-hosted, open-source stack |
-| `elasticsearch` | Cloud / Self-hosted | Cloud ID or hosts | Enterprise, Elastic Cloud |
-| `scout` | Per provider | API keys + Scout setup | Teams on Algolia / MeiliSearch / Typesense |
+### Layer 2 — SearchManager (routes to the active driver)
+
+| Setting | Value |
+|---------|-------|
+| `SMARTSEARCH_DRIVER` | Pick one: `database`, `opensearch`, `elasticsearch`, `scout` |
+| `SMARTSEARCH_FALLBACK` | Optional fallback if primary driver fails |
+
+### Layer 3 — Drivers (execution engines)
+
+| Driver | Type | Mechanism | Cost | Setup Effort |
+|--------|------|-----------|------|-------------|
+| `DatabaseDriver` | Standalone | `LIKE` / `ILIKE` auto-detect | Free | None — works immediately |
+| `OpenSearchDriver` | Standalone | HTTP API via `opensearch-php` | Free | Medium — Docker self-hosted |
+| `ElasticsearchDriver` | Standalone | HTTP API via `elasticsearch-php` | Cloud / Self-hosted | Medium — Cloud ID or hosts |
+| `ScoutDriver` | Bridge | Delegates to Scout providers | Per provider | Low — Scout + API keys |
+
+ScoutDriver providers:
+
+| Provider | Type | Environment |
+|----------|------|-------------|
+| Algolia | Paid cloud | SaaS, zero server management |
+| MeiliSearch | Free open-source / Paid cloud | Self-hosted or managed cloud |
+| Typesense | Free open-source / Paid cloud | Self-hosted or managed cloud |
 
 ---
 
