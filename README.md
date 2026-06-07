@@ -89,49 +89,51 @@ SmartSearch is **not** "yet another wrapper." It is an **open-source abstraction
 
 ## Driver Architecture
 
-SmartSearch's Strategy Pattern lets you pick your search engine at runtime — no code changes, just swap the driver:
+SmartSearch decouples your application from the search engine. Your code writes queries once — the active driver handles execution:
 
 ```
-                          ┌─────────────────────────────┐
-                          │   Your Application Code     │
-                          │  Search::for(Product)       │
-                          │       ->query('phone')      │
-                          │       ->where('price','>',100)│
-                          │       ->get()               │
-                          └──────────┬──────────────────┘
-                                     │
-                          ┌──────────▼──────────────────┐
-                          │      SearchManager          │
-                          │  (routes to active driver)  │
-                          └──────────┬──────────────────┘
-                                     │
-              ┌──────────────────────┼──────────────────────┐
-              │                      │                      │
-    ┌─────────▼─────────┐  ┌────────▼────────┐  ┌─────────▼─────────┐
-    │   DatabaseDriver  │  │ OpenSearchDriver │  │ ElasticsearchDriver│
-    │ (مجاني - لا يحتاج  │  │ (مجاني - مفتوح    │  │ (سحابي/مدفوع -     │
-    │  أي خدمة خارجية)   │  │  المصدر - Self-  │  │ Elastic Cloud)     │
-    │                   │  │  Hosted)         │  │                   │
-    │ auto-detects      │  │ open-source     │  │ cloud_id / api_key│
-    │ LIKE / ILIKE      │  │ fork of ES      │  │                    │
-    └───────────────────┘  └──────────────────┘  └────────────────────┘
-                                     │
-                          ┌──────────▼──────────────────┐
-                          │        ScoutDriver          │
-                          │  (يربطك بكل providers Scout) │
-                          │                             │
-                          ├── Algolia (مدفوع)           │
-                          ├── MeiliSearch (مفتوح/سحابي)  │
-                          ├── Typesense (مفتوح/سحابي)     │
-                          └─────────────────────────────┘
+                        ┌──────────────────────────┐
+                        │     Application Code     │
+                        │  Search::for(Product)    │
+                        │    ->query('phone')      │
+                        │    ->where('price','>',100)│
+                        │    ->get()               │
+                        └───────────┬──────────────┘
+                                    │
+                        ┌───────────▼──────────────┐
+                        │       SearchManager      │
+                        │  Routes to active driver │
+                        └──────┬──────────┬────────┘
+                               │          │
+                     ┌─────────┘          └─────────┐
+                     ▼                               ▼
+          ┌─────────────────────┐     ┌─────────────────────┐
+          │   Standalone        │     │    Bridge           │
+          │   (native engines)  │     │    (third-party)    │
+          │                     │     │                     │
+          │  DatabaseDriver     │     │  ScoutDriver        │
+          │  ▸ LIKE / ILIKE     │     │  ▸ Algolia          │
+          │  ▸ No setup needed  │     │  ▸ MeiliSearch      │
+          │  ▸ Free             │     │  ▸ Typesense        │
+          │                     │     │                     │
+          │  OpenSearchDriver   │     └─────────────────────┘
+          │  ▸ Self-hosted      │
+          │  ▸ Open source      │
+          │  ▸ Free             │
+          │                     │
+          │  ElasticsearchDriver│
+          │  ▸ Elastic Cloud    │
+          │  ▸ Self-hosted      │
+          │  ▸ Enterprise       │
+          └─────────────────────┘
 ```
 
-| Driver | Cost | Setup Effort | Best For |
-|--------|------|-------------|----------|
-| `database` | Free | None (works immediately) | Small projects, MVPs, dev/testing |
-| `opensearch` | Free (self-hosted) | Medium | Production self-hosted search |
-| `elasticsearch` | Paid (Elastic Cloud) or self-hosted | Medium-High | Enterprise, Elastic Cloud |
-| `scout` | Varies by provider | Low (needs Scout + API keys) | Teams already using Scout providers |
+| Driver | Cost | Setup | Best For |
+|--------|------|-------|----------|
+| `database` | Free | None — works immediately | MVPs, dev/testing, small projects |
+| `opensearch` | Free | Self-hosted (Docker) | Production self-hosted, open-source stack |
+| `elasticsearch` | Cloud / Self-hosted | Cloud ID or hosts | Enterprise, Elastic Cloud |
+| `scout` | Per provider | API keys + Scout setup | Teams on Algolia / MeiliSearch / Typesense |
 
 ---
 
