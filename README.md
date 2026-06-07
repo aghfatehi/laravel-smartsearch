@@ -2,6 +2,7 @@
  <a href="https://www.php.net/"><img src="https://img.shields.io/badge/php-^8.1-8892BF.svg?style=for-the-badge&logo=php" alt="PHP Version"></a>
  <a href="https://laravel.com/"><img src="https://img.shields.io/badge/Laravel-9|10|11|12|13-FF2D20.svg?style=for-the-badge&logo=laravel" alt="Laravel Version"></a>
  <a href="#driver-system"><img src="https://img.shields.io/badge/Drivers-OpenSearch_%2B_Elasticsearch_%2B_Scout_%2B_Database-00A859.svg?style=for-the-badge" alt="Drivers"></a>
+ <a href="#semantic-search-ai-powered-embeddings--vector-search"><img src="https://img.shields.io/badge/AI_Search-Vector_%2B_Semantic-FF6F00.svg?style=for-the-badge" alt="AI Search"></a>
  <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg?style=for-the-badge" alt="License"></a>
  <a href="https://github.com/aghfatehi/laravel-smartsearch/actions"><img src="https://img.shields.io/github/actions/workflow/status/aghfatehi/laravel-smartsearch/tests.yml?style=for-the-badge&label=Tests&branch=main" alt="Tests"></a>
  <a href="https://packagist.org/packages/aghfatehi/laravel-smartsearch"><img src="https://img.shields.io/packagist/v/aghfatehi/laravel-smartsearch.svg?style=for-the-badge" alt="Packagist"></a>
@@ -13,7 +14,8 @@
 <h1 align="center">Laravel SmartSearch</h1>
 <p align="center">
     <strong>Laravel search package</strong> — the most versatile <strong>full text search for Laravel</strong> with OpenSearch, Elasticsearch, Scout, and database search.<br>
-    Zero-config, production-safe, <strong>queue-driven search indexing</strong>. A powerful <strong>Eloquent search</strong> engine for your models.
+    Zero-config, production-safe, <strong>queue-driven search indexing</strong> with <strong>AI-powered semantic & vector search</strong>.<br>
+    A powerful <strong>Eloquent search</strong> engine for your models.
 </p>
 
 ---
@@ -298,7 +300,11 @@ OPENSEARCH_ANALYZER=arabic    # Text analyzer (standard, arabic, english, etc.)
 
 ---
 
-## Semantic Search (Embeddings + Vector Search)
+## Semantic Search (AI-Powered Embeddings & Vector Search)
+
+> **AI-powered semantic search — a game-changer for the search world.**  
+> SmartSearch understands meaning, not just keywords. Powered by free, local [Ollama](https://ollama.com) — no subscriptions, no third-party APIs.  
+> Perfect for SEO, user experience, and Arabic & multilingual applications.
 
 SmartSearch supports **semantic search** using vector embeddings — it understands meaning, not just keywords. This is powered by [Ollama](https://ollama.com) (free, local, no API keys).
 
