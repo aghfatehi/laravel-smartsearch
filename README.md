@@ -471,7 +471,7 @@ SmartSearch's `ScoutDriver` will call Scout's API through your model. Auto-index
 ### Basic search
 
 ```php
-use SmartSearch\Facades\Search;
+use SmartSearch\Facades\SmartSearch;
 
 $results = SmartSearch::for(Product::class)
     ->query('iphone')
