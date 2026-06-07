@@ -108,6 +108,18 @@ SMARTSEARCH_FALLBACK=database
 
 That's it.
 
+### Environment Variables
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `SMARTSEARCH_DRIVER` | `database` | Primary search driver: `database`, `elasticsearch`, or `scout` |
+| `SMARTSEARCH_FALLBACK` | `database` | Fallback driver when primary is unavailable |
+| `SMARTSEARCH_QUEUE` | `true` | Enable/disable queue-driven indexing |
+| `SMARTSEARCH_CONNECTION` | `default` | Queue connection for index/delete jobs |
+| `SMARTSEARCH_INDEX_PREFIX` | `` | Prefix for all search index names |
+| `ELASTICSEARCH_HOSTS` | `localhost:9200` | Comma-separated Elasticsearch hosts |
+| `ELASTICSEARCH_ANALYZER` | `standard` | Elasticsearch text analyzer (e.g. `arabic`, `english`) |
+
 ---
 
 ## Usage
