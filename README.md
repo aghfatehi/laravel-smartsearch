@@ -491,9 +491,10 @@ Laravel SmartSearch Layer
     |
     v
 +---------------------------------------------+
-| DatabaseDriver (default - works OOB)        |
-| ElasticsearchDriver (optional high-perf)    |
-| ScoutDriver (optional - Algolia, Meili...)  |
+| DatabaseDriver    (default - works OOB)     |
+| OpenSearchDriver  (optional - self-hosted)  |
+| ElasticsearchDriver (optional - high-perf)  |
+| ScoutDriver       (optional - Algolia, ...) |
 +---------------------------------------------+
 | Automatic safe fallback between drivers     |
 +---------------------------------------------+
