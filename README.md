@@ -50,7 +50,7 @@ Integrating **search for Laravel applications** often means:
 
 ## Features
 
-- **Unified Laravel search API** — `Search::for(Model::class)->query('term')->get()`
+- **Unified Laravel search API** — `SmartSearch::for(Model::class)->query('term')->get()`
 - **Full text search for Laravel** — works out of the box with database search, no extra packages
 - **Eloquent search** — trait-based, integrates directly with your models
 - **Database search Laravel** — `LIKE` / `ILIKE` auto-detects MySQL, PostgreSQL, SQLite, SQL Server
@@ -96,7 +96,7 @@ SmartSearch decouples your application from the search engine. The architecture 
 ### Layer 1 — Your Code (unified API, never changes)
 
 ```php
-Search::for(Product::class)->query('phone')->where('price', '>', 100)->get();
+SmartSearch::for(Product::class)->query('phone')->where('price', '>', 100)->get();
 ```
 
 ### Layer 2 — SearchManager (routes to the active driver)
@@ -387,7 +387,7 @@ Set `SMARTSEARCH_EMBEDDINGS_ENABLED=true` in your `.env`. The package will gener
 
 ```php
 // Full-text + semantic combined (hybrid)
-Search::for(Property::class)
+SmartSearch::for(Property::class)
     ->query('شقة في الرياض')
     ->similarTo('قريبة من المدارس والخدمات')  // ← semantic search
     ->where('price', '<', 1000000)
@@ -469,7 +469,7 @@ SmartSearch's `ScoutDriver` will call Scout's API through your model. Auto-index
 ```php
 use SmartSearch\Facades\Search;
 
-$results = Search::for(Product::class)
+$results = SmartSearch::for(Product::class)
     ->query('iphone')
     ->get();
 ```
@@ -477,7 +477,7 @@ $results = Search::for(Product::class)
 ### Search with filters
 
 ```php
-$results = Search::for(Product::class)
+$results = SmartSearch::for(Product::class)
     ->query('iphone')
     ->where('price', '<', 5000)
     ->where('brand', 'Apple')
@@ -487,7 +487,7 @@ $results = Search::for(Product::class)
 ### Paginated search
 
 ```php
-$results = Search::for(Product::class)
+$results = SmartSearch::for(Product::class)
     ->query('laptop')
     ->paginate(20);
 ```
@@ -526,7 +526,7 @@ When your primary search engine (Elasticsearch / Scout) is unavailable:
 
 ```php
 // No special error handling needed
-$results = Search::for(Product::class)->query('iphone')->get();
+$results = SmartSearch::for(Product::class)->query('iphone')->get();
 // Automatically falls back to database search
 ```
 

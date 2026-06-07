@@ -67,7 +67,7 @@
                 "SmartSearch\\SmartSearchServiceProvider"
             ],
             "aliases": {
-                "Search": "SmartSearch\\Facades\\Search"
+                "SmartSearch": "SmartSearch\\Facades\\SmartSearch"
             }
         }
     },

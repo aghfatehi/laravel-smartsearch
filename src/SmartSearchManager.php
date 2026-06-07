@@ -6,12 +6,12 @@ use Illuminate\Support\Facades\Log;
 use SmartSearch\Builders\SearchQueryBuilder;
 use SmartSearch\Contracts\EmbeddingProvider;
 use SmartSearch\Contracts\SearchDriver;
-use SmartSearch\Contracts\SearchManager as SearchManagerContract;
+use SmartSearch\Contracts\SmartSearchManager as SmartSearchManagerContract;
 use SmartSearch\Drivers\DatabaseDriver;
 use SmartSearch\Drivers\ElasticsearchDriver;
 use SmartSearch\Drivers\OpenSearchDriver;
 
-class SearchManager implements SearchManagerContract
+class SmartSearchManager implements SmartSearchManagerContract
 {
     private array $drivers = [];
     private array $config;

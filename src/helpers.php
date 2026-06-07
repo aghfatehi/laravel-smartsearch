@@ -1,11 +1,11 @@
 <?php
 
-use SmartSearch\Facades\Search;
+use SmartSearch\Facades\SmartSearch;
 
 if (!function_exists('smartSearch')) {
     function smartSearch(string $modelClass, ?string $query = null)
     {
-        $builder = Search::for($modelClass);
+        $builder = SmartSearch::for($modelClass);
 
         if ($query !== null) {
             $builder->query($query);

@@ -32,7 +32,7 @@ trait Searchable
 
     public static function search(string $query): SearchQueryBuilder
     {
-        return app(\SmartSearch\Contracts\SearchManager::class)
+        return app(\SmartSearch\Contracts\SmartSearchManager::class)
             ->for(static::class)
             ->query($query);
     }

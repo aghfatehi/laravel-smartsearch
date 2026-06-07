@@ -4,7 +4,7 @@ namespace SmartSearch;
 
 use Illuminate\Support\ServiceProvider;
 use SmartSearch\Contracts\SearchDriver;
-use SmartSearch\Contracts\SearchManager as SearchManagerContract;
+use SmartSearch\Contracts\SmartSearchManager as SmartSearchManagerContract;
 
 class SmartSearchServiceProvider extends ServiceProvider
 {
@@ -12,12 +12,12 @@ class SmartSearchServiceProvider extends ServiceProvider
     {
         $this->mergeConfigFrom(__DIR__ . '/../config/smartsearch.php', 'smartsearch');
 
-        $this->app->singleton(SearchManagerContract::class, function ($app) {
-            return new SearchManager($app['config']['smartsearch']);
+        $this->app->singleton(SmartSearchManagerContract::class, function ($app) {
+            return new SmartSearchManager($app['config']['smartsearch']);
         });
 
         $this->app->bind(SearchDriver::class, function ($app) {
-            $manager = $app->make(SearchManagerContract::class);
+            $manager = $app->make(SmartSearchManagerContract::class);
             return $manager->driver();
         });
     }

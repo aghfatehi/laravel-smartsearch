@@ -3,9 +3,9 @@
 namespace SmartSearch\Tests\Unit;
 
 use SmartSearch\Builders\SearchQueryBuilder;
-use SmartSearch\Contracts\SearchManager as SearchManagerContract;
+use SmartSearch\Contracts\SmartSearchManager as SmartSearchManagerContract;
 use SmartSearch\Drivers\DatabaseDriver;
-use SmartSearch\SearchManager;
+use SmartSearch\SmartSearchManager;
 use SmartSearch\Tests\Stubs\Product;
 use SmartSearch\Tests\TestCase;
 
@@ -13,7 +13,7 @@ class SearchManagerTest extends TestCase
 {
     public function test_for_returns_query_builder(): void
     {
-        $manager = app(SearchManagerContract::class);
+        $manager = app(SmartSearchManagerContract::class);
         $builder = $manager->for(Product::class);
 
         $this->assertInstanceOf(SearchQueryBuilder::class, $builder);
@@ -26,7 +26,7 @@ class SearchManagerTest extends TestCase
 
         Product::create(['name' => 'iPhone', 'description' => 'Phone', 'price' => 5000]);
 
-        $manager = app(SearchManagerContract::class);
+        $manager = app(SmartSearchManagerContract::class);
         $results = $manager->for(Product::class)
             ->query('iPhone')
             ->get();
@@ -36,7 +36,7 @@ class SearchManagerTest extends TestCase
 
     public function test_driver_resolves_database(): void
     {
-        $manager = new SearchManager([
+        $manager = new SmartSearchManager([
             'driver' => 'database',
             'fallback' => null,
             'elasticsearch' => ['hosts' => ['localhost:9200']],
@@ -48,7 +48,7 @@ class SearchManagerTest extends TestCase
 
     public function test_fallback_is_null_when_same_as_primary(): void
     {
-        $manager = new SearchManager([
+        $manager = new SmartSearchManager([
             'driver' => 'database',
             'fallback' => 'database',
             'elasticsearch' => ['hosts' => ['localhost:9200']],
@@ -62,7 +62,7 @@ class SearchManagerTest extends TestCase
     {
         $this->expectException(\InvalidArgumentException::class);
 
-        $manager = new SearchManager([
+        $manager = new SmartSearchManager([
             'driver' => 'nonexistent',
             'fallback' => null,
             'elasticsearch' => ['hosts' => ['localhost:9200']],

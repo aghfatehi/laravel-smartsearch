@@ -4,10 +4,10 @@ namespace SmartSearch\Facades;
 
 use Illuminate\Support\Facades\Facade;
 
-class Search extends Facade
+class SmartSearch extends Facade
 {
     protected static function getFacadeAccessor()
     {
-        return \SmartSearch\Contracts\SearchManager::class;
+        return \SmartSearch\Contracts\SmartSearchManager::class;
     }
 }

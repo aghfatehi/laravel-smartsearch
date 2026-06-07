@@ -2,7 +2,7 @@
 
 namespace SmartSearch\Tests\Feature;
 
-use SmartSearch\Facades\Search;
+use SmartSearch\Facades\SmartSearch;
 use SmartSearch\Tests\Stubs\Product;
 use SmartSearch\Tests\TestCase;
 
@@ -18,7 +18,7 @@ class SmartSearchFacadeTest extends TestCase
     {
         Product::create(['name' => 'iPhone 15', 'description' => 'Apple smartphone', 'price' => 5000]);
 
-        $results = Search::for(Product::class)
+        $results = SmartSearch::for(Product::class)
             ->query('iPhone')
             ->get();
 
@@ -31,7 +31,7 @@ class SmartSearchFacadeTest extends TestCase
         Product::create(['name' => 'iPhone 15', 'description' => 'Pro', 'price' => 5000]);
         Product::create(['name' => 'iPhone 14', 'description' => 'Standard', 'price' => 3000]);
 
-        $results = Search::for(Product::class)
+        $results = SmartSearch::for(Product::class)
             ->query('iPhone')
             ->where('price', '>=', 4000)
             ->get();
